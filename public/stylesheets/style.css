@@ -29,3 +29,11 @@ body {
 	margin-bottom: 15px;
 	padding: 7px 9px;
 }
+
+#chat {
+	padding-top:20px;
+}
+
+#draw {
+	background: blue;
+}
