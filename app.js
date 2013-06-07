@@ -21,6 +21,19 @@ app.configure(function () {
 });
 
 app.get('/', routes.index);
+app.get('/login', routes.login);
+app.get('/register', routes.register);
+
+
+
+
+
+
+
+
+
+
+
 
 var server = http.createServer(app).listen(3000);
 var io = require('socket.io').listen(server);
