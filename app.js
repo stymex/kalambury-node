@@ -2,6 +2,9 @@ var express = require('express');
 var http = require('http');
 var routes = require('./routes');
 var path = require('path');
+var mongoose = require('mongoose');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
 var app = express();
 
@@ -14,26 +17,88 @@ app.configure(function () {
     app.use(express.methodOverride());
     app.use(express.cookieParser('secret'));
     app.use(express.session());
-    //~ app.use(passport.initialize());
-	//~ app.use(passport.session()); 
+    app.use(passport.initialize());
+	app.use(passport.session()); 
     app.use(app.router);
     app.use(express.static(path.join(__dirname, 'public')));
 });
 
-app.get('/', routes.index);
+app.get('/', function(req, res){
+	if(!req.session.passport.user) {
+		res.redirect('/login');
+	} else {
+		User.findOne({ _id: ObjectId(req.session.passport.user) } , function(err, user) {
+			if (err) { return done(err); }
+			res.render('index');
+		});
+	}
+});
+
 app.get('/login', routes.login);
+
 app.get('/register', routes.register);
 
+app.post('/register', function(req, res){
+  	var usr = new User();
+	usr.username = req.body.username;
+	usr.password = req.body.password;
+	usr.points = 0;
+	usr.save();
+	res.redirect('/login');
+});
 
+app.post('/login', passport.authenticate('local', { 
+	successRedirect: '/',
+	failureRedirect: '/login'
+}));
 
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/login');
+});
 
+mongoose.connect('mongodb://localhost/users');
 
+var Schema = mongoose.Schema
+  , ObjectId = Schema.ObjectId;
 
+var UserSchema = new Schema({
+    id    : ObjectId
+  , username     : String
+  , password      : String
+  , points      : Number
+});
 
+UserSchema.methods.validPassword = function( pwd ) {
+    return ( this.password === pwd );
+};
 
+var User = mongoose.model('User', UserSchema);
 
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    User.findOne({ username: username }, function(err, user) {
+      if (err) { return done(err); }
+      if (!user) {
+        return done(null, false, { message: 'Incorrect username.' });
+      }
+      if (!user.validPassword(password)) {
+        return done(null, false, { message: 'Incorrect password.' });
+      }
+      return done(null, user);
+    });
+  }
+));
 
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
 
+passport.deserializeUser(function(id, done) {
+  User.findById(id, function(err, user) {
+    done(err, user);
+  });
+});
 
 var server = http.createServer(app).listen(3000);
 var io = require('socket.io').listen(server);
@@ -41,7 +106,6 @@ var io = require('socket.io').listen(server);
 var usernames = {};
 
 io.sockets.on('connection', function(socket) {
-
 
 	socket.on('sendchat', function(data) {
 		io.sockets.emit('updatechat', socket.username, data);
