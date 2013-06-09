@@ -26,14 +26,13 @@
 	  </div>
 	</div>
 	<div class="container">
-		<div class="row">
-<!--
-			<div class="alert alert-info">
+		<div class="row" id="notes">
+			<div class="alert alert-info text-center" hidden="true" id="instr">
+				<button type="button" class="close" data-dismiss="alert">&times;</button>
 			  Draw: car
 			</div>
--->
 		</div>
-		<div class="row">
+		<div class="row" id="content">
 			<div class="span6" id="draw">
 				<canvas id="area" width="450" height="400">
 					
@@ -43,6 +42,8 @@
 				<div class="input-append">
 				  <input class="span2" id="appendedInputButton" type="text">
 				  <button class="btn" type="button" id="send">Send</button>
+				  <button class="btn" type="button" id="clear">Clear</button>
+				  <button class="btn" type="button" id="drw">Draw!</button>
 				</div>
 				<table class="table table-condensed table-hover table-striped table-bordered">
 					  <thead>

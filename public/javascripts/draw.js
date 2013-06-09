@@ -4,13 +4,14 @@ $(document).ready(function(){
     var ctx = canvas[0].getContext('2d');
 
     var drawing = false;
+    var turn = true;
 
     var clients = {};
 
     var socket = io.connect('http://localhost:3000');
 
-    socket.on('moving', function (data) {
-		if(data.drawing && clients[data.id]){
+    socket.on('draw', function (data) {
+		if(clients[data.id]){
 			drawLine(clients[data.id].x, clients[data.id].y, data.x, data.y);
 		}
         clients[data.id] = data;
@@ -29,19 +30,13 @@ $(document).ready(function(){
         drawing = false;
     });
 
-    var lastEmit = $.now();
-
     $(document).on('mousemove',function(e){
-        if($.now() - lastEmit > 10){
-            socket.emit('mousemove',{
-                'x': e.pageX,
-                'y': e.pageY,
-                'drawing': drawing,
-                'id': id
-            });
-            lastEmit = $.now();
-        }
-        if(drawing){
+        if(turn && drawing){
+			socket.emit('mousemove',{
+				'x': e.pageX,
+				'y': e.pageY,
+				'id': id
+			});
             drawLine(prev.x, prev.y, e.pageX, e.pageY);
             prev.x = e.pageX;
             prev.y = e.pageY;
@@ -51,7 +46,7 @@ $(document).ready(function(){
     var p = $('#area');
     var position = p.position();
     
-	$(window).resize(function() {
+	$(window).on('resize', function() {
 		position = p.position();
 	});
 
@@ -60,4 +55,10 @@ $(document).ready(function(){
         ctx.lineTo(tox - position.left, toy - position.top);
         ctx.stroke();
     }
+    
+    $('#drw').click(function() {
+      $('#instr').fadeIn('slow', function() {
+        //~ $('#instr').fadeOut('slow');
+      });
+    });
 });

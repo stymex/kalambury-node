@@ -132,6 +132,6 @@ io.sockets.on('connection', function(socket) {
 	});
 	
 	socket.on('mousemove', function (data) {
-        socket.broadcast.emit('moving', data);
+        socket.broadcast.emit('draw', data);
     });
 });

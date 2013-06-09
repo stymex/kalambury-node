@@ -30,6 +30,16 @@ body {
 	padding: 7px 9px;
 }
 
+#notes {
+	padding-top:20px;
+}
+
+#content {
+/*
+	padding-top:20px;
+*/
+}
+
 #chat {
 	padding-top:20px;
 }
