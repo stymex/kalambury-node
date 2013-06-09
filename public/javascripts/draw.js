@@ -4,7 +4,7 @@ $(document).ready(function(){
     var ctx = canvas[0].getContext('2d');
 
     var drawing = false;
-    var turn = true;
+    var turn = false;
 
     var clients = {};
 
@@ -15,6 +15,12 @@ $(document).ready(function(){
 			drawLine(clients[data.id].x, clients[data.id].y, data.x, data.y);
 		}
         clients[data.id] = data;
+    });
+    
+    socket.on('turnStart', function (word) {
+		$('#info p').text('You draw: ' + word);
+		$('#info').fadeIn('slow');
+		turn = true;
     });
 
     var prev = {};
@@ -57,9 +63,7 @@ $(document).ready(function(){
     }
     
     $('#drw').click(function() {
-      //~ $('#info').fadeIn('slow', function() {
-		  //~ 
-      //~ });
+      socket.emit('turnRequest');
     });
     
     $('.info').click(function() {

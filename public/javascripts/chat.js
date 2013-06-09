@@ -18,9 +18,11 @@ $(document).ready(function(){
 	});
 
 	$('#send').click( function() {
-		var message = $('#appendedInputButton').val();
-		$('#appendedInputButton').val('');
-		socket.emit('sendchat', message);
+		if($('#appendedInputButton').val()!=='') {
+			var message = $('#appendedInputButton').val();
+			$('#appendedInputButton').val('');
+			socket.emit('sendchat', message);
+		}
 	});
 	
 	$('#clear').click( function() {

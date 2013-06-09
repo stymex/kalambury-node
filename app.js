@@ -109,6 +109,7 @@ var io = require('socket.io').listen(server);
 
 var users = {};
 var words = ["bed","car","river","beach","sword","lamp"];
+var block = false;
 
 
 io.sockets.on('connection', function(socket) {
@@ -134,4 +135,11 @@ io.sockets.on('connection', function(socket) {
 	socket.on('mousemove', function (data) {
         socket.broadcast.emit('draw', data);
     });
+    
+    socket.on('turnRequest', function () {
+		if(!block) {
+			socket.emit('turnStart', words[Math.floor(Math.random() * words.length)]);
+			block = false;
+		}
+	});
 });
