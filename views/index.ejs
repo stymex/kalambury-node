@@ -2,12 +2,17 @@
 <html>
   <head>
     <title>Kalambury</title>
+    <script> 
+		var nick = '<%= nick %>';
+		var id = '<%= id %>';
+    </script>
     <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <script src="/bootstrap/js/bootstrap.min.js"></script>
     <link href="/stylesheets/style.css" rel="stylesheet">
     <script src="/javascripts/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script src="/javascripts/chat.js"></script>
+    <script src="/javascripts/draw.js"></script>
   </head>
   <body>
 	<div class="navbar navbar-static-top">
@@ -21,39 +26,48 @@
 	  </div>
 	</div>
 	<div class="container">
-		<div class="span6" id="draw">
-			Vestibulum et commodo velit. Suspendisse risus ipsum, pharetra sed turpis id, fermentum tempus justo. Praesent faucibus, augue tempor commodo dapibus, libero lorem congue arcu, a euismod est felis rutrum augue. Curabitur aliquam pretium nunc, sed mattis lectus pharetra sit amet. Aliquam erat volutpat. Morbi vulputate nisl faucibus sodales euismod. Praesent nec arcu in arcu cursus pulvinar. Vestibulum varius ante quis sem rutrum, at accumsan turpis facilisis. Fusce porta eleifend nibh eu varius. Aliquam at vehicula ipsum. Nullam ut nunc erat. Nullam id eros vitae justo vestibulum dictum a vitae velit.
-			Quisque velit arcu, convallis sit amet tincidunt ut, rhoncus interdum mauris. Ut dictum felis diam, laoreet semper erat porttitor eget. In pulvinar rhoncus nibh, id facilisis sem ultricies sit amet. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Morbi egestas eleifend nulla, ac ullamcorper purus sagittis non. In ultricies semper velit ac volutpat. Etiam ultricies vel dolor ac condimentum. Fusce sit amet turpis eget nunc congue ornare quis et dolor.
-			Nulla facilisi. Donec euismod elit id ultricies ullamcorper. Etiam eleifend tincidunt erat at pulvinar. Quisque nisi nibh, viverra ultricies risus ut, molestie placerat est. Vivamus placerat in est vel scelerisque. Aenean sagittis tristique nisi, eu egestas dolor convallis quis. Morbi sit amet ultricies mi, in condimentum eros. Duis sed lobortis neque. Vestibulum eu auctor leo. Aenean sem sem, blandit ut turpis eget, mattis viverra massa. Phasellus nunc augue, condimentum at quam nec, tempor feugiat libero. In sit amet malesuada nisl. Etiam a eleifend nisi, mollis sollicitudin nisi.
-		</div>
-		<div class="span4" id="chat">
-			<div class="input-append">
-			  <input class="span2" id="appendedInputButton" type="text">
-			  <button class="btn" type="button" id="send">Send</button>
+		<div class="row">
+<!--
+			<div class="alert alert-info">
+			  Draw: car
 			</div>
-			<table class="table table-condensed table-hover table-striped table-bordered">
-				  <thead>
-					<tr>
-					  <th>Username</th>
-					  <th>Message</th>
-					</tr>
-				  </thead>
-				  <tbody id="chat">
-					  
-				  </tbody>
-			</table>
+-->
 		</div>
-		<div class="span1" id="online">
-			<table class="table table-condensed table-hover table-striped table-bordered">
-				  <thead>
-					<tr>
-					  <th>Online</th>
-					</tr>
-				  </thead>
-				  <tbody id="users">
+		<div class="row">
+			<div class="span6" id="draw">
+				<canvas id="area" width="450" height="400">
 					
-				  </tbody>
-			</table>
+				</canvas>
+			</div>
+			<div class="span4" id="chat">
+				<div class="input-append">
+				  <input class="span2" id="appendedInputButton" type="text">
+				  <button class="btn" type="button" id="send">Send</button>
+				</div>
+				<table class="table table-condensed table-hover table-striped table-bordered">
+					  <thead>
+						<tr>
+						  <th>Username</th>
+						  <th>Message</th>
+						</tr>
+					  </thead>
+					  <tbody id="chat">
+						  
+					  </tbody>
+				</table>
+			</div>
+			<div class="span1" id="online">
+				<table class="table table-condensed table-hover table-striped table-bordered">
+					  <thead>
+						<tr>
+						  <th>Online</th>
+						</tr>
+					  </thead>
+					  <tbody id="users">
+						
+					  </tbody>
+				</table>
+			</div>
 		</div>
 	</div>
   </body>

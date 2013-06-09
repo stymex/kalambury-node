@@ -8,7 +8,7 @@ var LocalStrategy = require('passport-local').Strategy;
 
 var app = express();
 
-app.configure(function () {
+app.configure( function () {
     app.set('views', __dirname + '/views');
     app.set('view engine', 'ejs');
     app.use(express.favicon());
@@ -27,16 +27,20 @@ app.get('/', function(req, res){
 	if(!req.session.passport.user) {
 		res.redirect('/login');
 	} else {
-		User.findOne({ _id: ObjectId(req.session.passport.user) } , function(err, user) {
+		User.findById(req.session.passport.user, function(err, user) {
 			if (err) { return done(err); }
-			res.render('index');
+			res.render('index', { nick: user.username, id: user._id });
 		});
 	}
 });
 
-app.get('/login', routes.login);
+app.get('/login', function(req, res){
+  res.render('login')
+});
 
-app.get('/register', routes.register);
+app.get('/register',  function(req, res){
+  res.render('register')
+});
 
 app.post('/register', function(req, res){
   	var usr = new User();
@@ -47,7 +51,7 @@ app.post('/register', function(req, res){
 	res.redirect('/login');
 });
 
-app.post('/login', passport.authenticate('local', { 
+app.post('/login', passport.authenticate('local', {
 	successRedirect: '/',
 	failureRedirect: '/login'
 }));
@@ -103,7 +107,9 @@ passport.deserializeUser(function(id, done) {
 var server = http.createServer(app).listen(3000);
 var io = require('socket.io').listen(server);
 
-var usernames = {};
+var users = {};
+var words = ["bed","car","river","beach","sword","lamp"];
+
 
 io.sockets.on('connection', function(socket) {
 
@@ -113,15 +119,19 @@ io.sockets.on('connection', function(socket) {
 
 	socket.on('adduser', function(username) {
 		socket.username = username;
-		usernames[username] = username;
+		users[username] = username;
 		socket.emit('updatechat', 'SERVER', 'you have connected');
 		socket.broadcast.emit('updatechat', 'SERVER', username + ' has connected');
-		io.sockets.emit('updateusers', usernames);
+		io.sockets.emit('updateusers', users);
 	});
 
 	socket.on('disconnect', function() {
-		delete usernames[socket.username];
-		io.sockets.emit('updateusers', usernames);
+		delete users[socket.username];
+		io.sockets.emit('updateusers', users);
 		socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has left');
 	});
+	
+	socket.on('mousemove', function (data) {
+        socket.broadcast.emit('moving', data);
+    });
 });
