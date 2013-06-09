@@ -50,15 +50,29 @@ $(document).ready(function(){
 		position = p.position();
 	});
 
-    function drawLine(fromx, fromy, tox, toy){
+    var drawLine = function (fromx, fromy, tox, toy) {
         ctx.moveTo(fromx - position.left, fromy - position.top);
         ctx.lineTo(tox - position.left, toy - position.top);
         ctx.stroke();
     }
     
     $('#drw').click(function() {
-      $('#instr').fadeIn('slow', function() {
-        //~ $('#instr').fadeOut('slow');
-      });
+      //~ $('#info').fadeIn('slow', function() {
+		  //~ 
+      //~ });
     });
+    
+    $('.info').click(function() {
+		$('#info').fadeOut('slow');
+    });
+    
+    $('.error').click(function() {
+		$('#error').fadeOut('slow');
+    });
+    
+    $('.success').click(function() {
+		$('#success').fadeOut('slow');
+    });
+    
+    
 });

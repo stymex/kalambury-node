@@ -22,4 +22,8 @@ $(document).ready(function(){
 		$('#appendedInputButton').val('');
 		socket.emit('sendchat', message);
 	});
+	
+	$('#clear').click( function() {
+		$('tbody#chat').empty();
+	});
 });
