@@ -158,6 +158,7 @@ io.sockets.on('connection', function(socket) {
 			socket.emit('turnStart', currentWord);
 			drawingPlayer = socket.username;
 			block = true;
+			io.sockets.emit('updatechat', 'SERVER', socket.username + ' is drawing now');
 		} else {
 			socket.emit('turnInProgress');
 		}
