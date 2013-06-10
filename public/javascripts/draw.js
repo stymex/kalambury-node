@@ -22,6 +22,16 @@ $(document).ready(function(){
 		$('#info').fadeIn('slow');
 		turn = true;
     });
+    
+    socket.on('clearCanvas', function (word) {
+		ctx.beginPath();
+		ctx.clearRect(0, 0, 450, 400);
+    });
+    
+    socket.on('turnInProgress', function (word) {
+		$('#error p').text('Turn is in progress, please wait');
+		$('#error').fadeIn('slow');
+    });
 
     var prev = {};
 

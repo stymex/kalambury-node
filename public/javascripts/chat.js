@@ -28,4 +28,5 @@ $(document).ready(function(){
 	$('#clear').click( function() {
 		$('tbody#chat').empty();
 	});
+	
 });

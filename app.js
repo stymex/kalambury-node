@@ -110,6 +110,8 @@ var io = require('socket.io').listen(server);
 var users = {};
 var words = ["bed","car","river","beach","sword","lamp"];
 var block = false;
+var drawingPlayer = '';
+var currentWord = '';
 
 
 io.sockets.on('connection', function(socket) {
@@ -127,6 +129,11 @@ io.sockets.on('connection', function(socket) {
 	});
 
 	socket.on('disconnect', function() {
+		if(drawingPlayer===socket.username) {
+			block = false;
+			drawingPlayer='';
+			socket.broadcast.emit('clearCanvas');
+		}
 		delete users[socket.username];
 		io.sockets.emit('updateusers', users);
 		socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has left');
@@ -139,7 +146,10 @@ io.sockets.on('connection', function(socket) {
     socket.on('turnRequest', function () {
 		if(!block) {
 			socket.emit('turnStart', words[Math.floor(Math.random() * words.length)]);
-			block = false;
+			block = true;
+			drawingPlayer = socket.username;
+		} else {
+			socket.emit('turnInProgress');
 		}
 	});
 });
