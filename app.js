@@ -116,8 +116,17 @@ var currentWord = '';
 
 io.sockets.on('connection', function(socket) {
 
-	socket.on('sendchat', function(data) {
-		io.sockets.emit('updatechat', socket.username, data);
+	socket.on('sendchat', function(message) {
+		if(message===currentWord) {
+			socket.emit('rightGuess');
+			block = false;
+			currentWord = '';
+			drawingPlayer = '';
+			io.sockets.emit('clearCanvas');
+			io.sockets.emit('enableInput');
+			io.sockets.emit('updatechat', 'SERVER', socket.username + ' guessed right');
+		}
+		io.sockets.emit('updatechat', socket.username, message);
 	});
 
 	socket.on('adduser', function(username) {
@@ -145,9 +154,10 @@ io.sockets.on('connection', function(socket) {
     
     socket.on('turnRequest', function () {
 		if(!block) {
-			socket.emit('turnStart', words[Math.floor(Math.random() * words.length)]);
-			block = true;
+			currentWord = words[Math.floor(Math.random() * words.length)];
+			socket.emit('turnStart', currentWord);
 			drawingPlayer = socket.username;
+			block = true;
 		} else {
 			socket.emit('turnInProgress');
 		}

@@ -19,8 +19,9 @@ $(document).ready(function(){
     
     socket.on('turnStart', function (word) {
 		$('#info p').text('You draw: ' + word);
-		$('#info').fadeIn('slow');
+		$('#info').fadeIn('slow').delay(3000).fadeOut('slow');
 		turn = true;
+		$("#appendedInputButton").prop('disabled', true);
     });
     
     socket.on('clearCanvas', function (word) {
@@ -28,9 +29,19 @@ $(document).ready(function(){
 		ctx.clearRect(0, 0, 450, 400);
     });
     
-    socket.on('turnInProgress', function (word) {
+    socket.on('enableInput', function (word) {
+		$("#appendedInputButton").prop('disabled', false);
+		turn = false;
+    });
+    
+    socket.on('turnInProgress', function () {
 		$('#error p').text('Turn is in progress, please wait');
-		$('#error').fadeIn('slow');
+		$('#error').fadeIn('slow').delay(3000).fadeOut('slow'); ;
+    });
+    
+    socket.on('rightGuess', function () {
+		$('#success p').text('That\'s it congratulations');
+		$('#success').fadeIn('slow').delay(3000).fadeOut('slow');
     });
 
     var prev = {};
@@ -75,18 +86,5 @@ $(document).ready(function(){
     $('#drw').click(function() {
       socket.emit('turnRequest');
     });
-    
-    $('.info').click(function() {
-		$('#info').fadeOut('slow');
-    });
-    
-    $('.error').click(function() {
-		$('#error').fadeOut('slow');
-    });
-    
-    $('.success').click(function() {
-		$('#success').fadeOut('slow');
-    });
-    
     
 });
