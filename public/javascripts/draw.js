@@ -8,11 +8,11 @@ $(document).ready(function(){
 
     var clients = {};
 
-    var socket = io.connect('http://localhost:3000');
+    var socket = io.connect(window.location.hostname);
 
     socket.on('draw', function (data) {
 		if(data.drawing && clients[data.id]){
-			drawLine(clients[data.id].x, clients[data.id].y, data.x, data.y);
+			drawLineEmit(clients[data.id].x, clients[data.id].y, data.x, data.y);
 		}
         clients[data.id] = data;
     });
@@ -56,31 +56,39 @@ $(document).ready(function(){
     $(document).bind('mouseup mouseleave',function(){
         drawing = false;
     });
-
-    $(document).on('mousemove',function(e){
-		if(turn){
-			socket.emit('mousemove',{
-				'x': e.pageX,
-				'y': e.pageY,
-				'drawing': drawing,
-				'id': id
-			});
-		}
-        if(turn && drawing){
-            drawLine(prev.x, prev.y, e.pageX, e.pageY);
-            prev.x = e.pageX;
-            prev.y = e.pageY;
-        }
-    });
     
     var p = $('#area');
     var position = p.position();
     
 	$(window).on('resize', function() {
 		position = p.position();
+		console.log(position.left);
+		console.log(position.top);
 	});
 
-    var drawLine = function (fromx, fromy, tox, toy) {
+    $('#area').on('mousemove',function(e){
+		if(turn){
+			socket.emit('mousemove',{
+				'x': e.pageX - position.left,
+				'y': e.pageY - position.top,
+				'drawing': drawing,
+				'id': id
+			});
+		}
+        if(turn && drawing){
+            drawLineLocal(prev.x, prev.y, e.pageX, e.pageY);
+            prev.x = e.pageX;
+            prev.y = e.pageY;
+        }
+    });
+
+    var drawLineEmit = function (fromx, fromy, tox, toy) {
+        ctx.moveTo(fromx, fromy);
+        ctx.lineTo(tox, toy);
+        ctx.stroke();
+    }
+    
+    var drawLineLocal = function (fromx, fromy, tox, toy) {
         ctx.moveTo(fromx - position.left, fromy - position.top);
         ctx.lineTo(tox - position.left, toy - position.top);
         ctx.stroke();

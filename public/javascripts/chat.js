@@ -1,5 +1,5 @@
 $(document).ready(function(){
-	var socket = io.connect('http://localhost:3000');
+	var socket = io.connect(window.location.hostname);
 
 	socket.on('connect', function(){
 	  socket.emit('adduser', nick);
