@@ -1,6 +1,6 @@
 var express = require('express');
 var http = require('http');
-var routes = require('./routes');
+//~ var routes = require('./routes');
 var path = require('path');
 var mongoose = require('mongoose');
 var passport = require('passport');
